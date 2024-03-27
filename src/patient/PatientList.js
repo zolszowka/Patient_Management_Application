@@ -61,13 +61,32 @@ const PatientList = () => {
         navigate(`/edit/${patientId}`);
     }
 
+    const handleSortLastNameButtonClick = () => {
+        const sortedPatients = [...patients].sort((a, b) => {
+            return a.lastname.localeCompare(b.lastname);
+        });
+        setPatients(sortedPatients);
+    }
+
+    const handleSortIdButtonClick = () => {
+        const sortedPatients = [...patients].sort((a, b) => {
+            return a.id - b.id;
+        });
+        setPatients(sortedPatients);
+    }
+
     return (
         <div className="PatientList-container">
             <div className="PatientList-title">All Patients</div>
+            <div className="PatientList-sorting-buttons">
+                <button onClick={() => handleSortLastNameButtonClick()}>Sort by Patient's Last Name</button>
+                <button onClick={() => handleSortIdButtonClick()}>Sort by Patient's ID</button>
+            </div>
             <div>
                 {patients.map(patient => (
                     <div className="PatientList-patient" key={patient.id}>
                         <div className="PatientList-patient-data">
+                            <p>ID: {patient.id}</p>
                             <p>First Name: {patient.firstname}</p>
                             <p>Last Name: {patient.lastname}</p>
                             <p>PESEL: {patient.pesel}</p>

@@ -32,3 +32,17 @@
 .PatientList-buttons button:first-child {
     margin-left: 0;
 }
+
+
+.PatientList-sorting-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+
+.PatientList-sorting-buttons button {
+    margin-left: 30px;
+    width: 250px;
+
+}

@@ -3,7 +3,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import './EditPatient.css';
 
 const EditPatient = () => {
-    const { patientId } = useParams();
+    const {patientId} = useParams();
     const [patients, setPatients] = useState([]);
     const [formData, setFormData] = useState({
         firstname: '',
@@ -67,7 +67,9 @@ const EditPatient = () => {
             return;
         }
 
-        const isPeselUnique = patients.every(patient => patient.pesel !== formData.pesel);
+        const isPeselUnique = patients.every(patient => {
+            return patient.pesel !== formData.pesel || patient.id === parseInt(patientId);
+        });
         if (!isPeselUnique) {
             alert("This PESEL already exists in the database.");
             return;
