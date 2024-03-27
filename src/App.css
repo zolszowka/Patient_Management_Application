@@ -1,0 +1,54 @@
+.App {
+    text-align: center;
+}
+
+.App-header {
+    background-color: white;
+    height: 10vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    font-size: calc(10px + 2vmin);
+    color: #0b6b83;
+    margin-bottom: 10px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.App-title {
+    width: 60%;
+}
+
+.App-buttons {
+    width: 40%;
+    display: flex;
+}
+
+.App-buttons button {
+    margin-left: 10px;
+}
+
+.App-buttons button:first-child {
+    margin-left: 0;
+}
+
+body {
+    background-color: ghostwhite;
+    justify-content: flex-start;
+}
+
+button {
+    background-color: #0b6b83;
+    color: white;
+    border: none;
+    width: 130px;
+    border-radius: 5px;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
