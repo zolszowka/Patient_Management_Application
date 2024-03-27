@@ -5,11 +5,11 @@ A simple application for managing patients in a medical clinic.
 ## Functional requirements
 
 The application allows
-* Add a patient.
-* Edit patient.
-* Delete patient.
-* List patients.
-* Sorting patient list.
+* Add a patient
+* Edit patient
+* Delete patient
+* List patients
+* Sorting patient list
 
 ## Technologies used
 * JavaScript
