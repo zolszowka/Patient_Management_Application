@@ -1,0 +1,36 @@
+.EditPatient {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.AddPatient-form {
+    text-align: center;
+    width: 300px;
+    margin: 0 auto;
+}
+
+.EditPatient-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.EditPatient-label {
+    width: 150px;
+    text-align: left;
+    float: left;
+}
+
+.EditPatient-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.EditPatient-button {
+    text-align: center;
+}

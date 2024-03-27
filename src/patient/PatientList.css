@@ -25,3 +25,10 @@
     text-align: center;
 }
 
+.PatientList-buttons button {
+    margin-left: 30px;
+}
+
+.PatientList-buttons button:first-child {
+    margin-left: 0;
+}

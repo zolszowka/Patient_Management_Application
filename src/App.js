@@ -2,6 +2,7 @@ import './App.css';
 import {Routes, Route, useNavigate} from "react-router-dom";
 import AddPatient from './patient/AddPatient';
 import PatientList from './patient/PatientList';
+import EditPatient from './patient/EditPatient';
 
 function App() {
     const navigate = useNavigate();
@@ -26,6 +27,7 @@ function App() {
             <Routes>
                 <Route path="/add" element={<AddPatient/>}/>
                 <Route path="/patientlist" element={<PatientList/>}/>
+                <Route path="/edit/:patientId" element={<EditPatient />} />
             </Routes>
         </div>
     );

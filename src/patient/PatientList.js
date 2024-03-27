@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import './PatientList.css';
+import {useNavigate} from "react-router-dom";
 
 const PatientList = () => {
     const [patients, setPatients] = useState([]);
@@ -23,11 +24,11 @@ const PatientList = () => {
 
         };
         openRequest.onerror = function (event) {
-            console.log('Error openning database');
+            console.log('Error opening database');
         };
     }, []);
 
-    const handleDeletePatient = (patientId) => {
+    const handleDeletePatientButtonClick = (patientId) => {
         const openRequest = indexedDB.open('PatientsDB', 1);
         openRequest.onsuccess = function (event) {
             const database = event.target.result;
@@ -40,7 +41,7 @@ const PatientList = () => {
                 console.log('Patient deleted successfully');
                 const updatedPatients = patients.filter(patient => patient.id !== patientId);
                 setPatients(updatedPatients);
-                alert('Patient deleted successfully')
+                alert('Patient deleted successfully.')
             };
 
             deleteRequest.onerror = function (event) {
@@ -49,9 +50,15 @@ const PatientList = () => {
 
         };
         openRequest.onerror = function (event) {
-            console.log('Error openning database');
+            console.log('Error opening database');
         };
 
+    }
+
+    const navigate = useNavigate();
+
+    const handleEditButtonClick = (patientId) => {
+        navigate(`/edit/${patientId}`);
     }
 
     return (
@@ -63,13 +70,14 @@ const PatientList = () => {
                         <div className="PatientList-patient-data">
                             <p>First Name: {patient.firstname}</p>
                             <p>Last Name: {patient.lastname}</p>
-                            <p>Pesel: {patient.pesel}</p>
+                            <p>PESEL: {patient.pesel}</p>
                             <p>Street: {patient.street}</p>
                             <p>City: {patient.city}</p>
                             <p>ZIP code: {patient.zipcode}</p>
                         </div>
                         <div className="PatientList-buttons">
-                            <button onClick={() => handleDeletePatient(patient.id)}>Delete</button>
+                            <button onClick={() => handleDeletePatientButtonClick(patient.id)}>Delete</button>
+                            <button onClick={() => handleEditButtonClick(patient.id)}>Edit</button>
                         </div>
                     </div>
                 ))}
