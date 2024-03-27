@@ -4,7 +4,7 @@ A simple application for managing patients in a medical clinic.
 
 ## Functional requirements
 
-The application allows
+The application allows:
 * Add a patient
 * Edit patient
 * Delete patient
