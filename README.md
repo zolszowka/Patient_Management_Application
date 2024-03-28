@@ -27,6 +27,9 @@ npm install
 ```
 npm install react-router-dom
 ```
+```
+npm install mysql
+```
 5. Start the app:
 ```
 npm start
