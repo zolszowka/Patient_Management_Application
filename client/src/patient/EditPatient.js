@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import './EditPatient.css';
+import axios from "axios";
 
 const EditPatient = () => {
     const {patientId} = useParams();
-    const [patients, setPatients] = useState([]);
     const [formData, setFormData] = useState({
+        id: '',
         firstname: '',
         lastname: '',
         pesel: '',
@@ -14,39 +15,15 @@ const EditPatient = () => {
         zipcode: ''
     });
 
+
     useEffect(() => {
-        const openRequest = indexedDB.open('PatientsDB', 1);
-
-        openRequest.onsuccess = function (event) {
-            const database = event.target.result;
-            const transaction = database.transaction(['patients'], 'readonly')
-            const objectStore = transaction.objectStore('patients');
-            console.log("Patient ID:", patientId);
-            const request = objectStore.get(parseInt(patientId));
-
-            request.onsuccess = function (event) {
-                const patientData = event.target.result;
-                if (patientData) {
-                    setFormData(patientData);
-                }
-            };
-
-            request.onerror = function (event) {
-                console.log('Error getting patient data from database')
-            };
-
-            const allPatientsRequest = objectStore.getAll();
-            allPatientsRequest.onsuccess = function (event) {
-                setPatients(event.target.result);
-            };
-
-            allPatientsRequest.onerror = function (event) {
-                console.log('Error getting patients from database')
-            };
-        };
-        openRequest.onerror = function (event) {
-            console.log('Error opening database');
-        };
+        axios.get(`http://localhost:5000/patient/${patientId}`)
+            .then((response) => {
+                setFormData(response.data[0])
+            })
+            .catch((error) => {
+                console.error('Error fetching patient data:', error);
+            });
     }, [patientId]);
 
     const handleChange = (e) => {
@@ -54,9 +31,11 @@ const EditPatient = () => {
         setFormData({...formData, [name]: value});
     };
 
-
-    const navigate = useNavigate();
     const handleSubmit = () => {
+        if (formData.zipcode.length !== 6) {
+            alert("ZIP code must have 6 characters.");
+            return;
+        }
         if (!formData.pesel) {
             alert("Please enter the PESEL.");
             return;
@@ -67,35 +46,34 @@ const EditPatient = () => {
             return;
         }
 
-        const isPeselUnique = patients.every(patient => {
-            return patient.pesel !== formData.pesel || patient.id === parseInt(patientId);
-        });
-        if (!isPeselUnique) {
-            alert("This PESEL already exists in the database.");
-            return;
-        }
-        const openRequest = indexedDB.open('PatientsDB', 1);
-
-        openRequest.onsuccess = function (event) {
-            const database = event.target.result;
-            const transaction = database.transaction(['patients'], 'readwrite');
-            const objectStore = transaction.objectStore('patients');
-            const addRequest = objectStore.put(formData);
-
-            addRequest.onsuccess = function (event) {
-                console.log('Patient updated successfully');
-                alert('Patient updated successfully.');
-                navigate("/patientlist");
-            };
-
-            addRequest.onerror = function (event) {
-                console.log('Error adding patient');
-            };
-        };
-
-        openRequest.onerror = function (event) {
-            console.log('Error opening database');
-        };
+        axios.get(`http://localhost:5000/checkpesel/${formData.id}/${formData.pesel}`)
+            .then((response) => {
+                if (response.data.exists) {
+                    alert("This PESEL already exists in the database.");
+                } else {
+                    axios.put(`http://localhost:5000/edit/${patientId}`, formData)
+                        .then((response) => {
+                            console.log("Patient updated successfully");
+                            alert('Patient updated successfully.');
+                            setFormData({
+                                id: '',
+                                firstname: '',
+                                lastname: '',
+                                pesel: '',
+                                street: '',
+                                city: '',
+                                zipcode: ''
+                            })
+                        })
+                        .catch((error) => {
+                            console.error('Error updating patient:', error);
+                            alert('Error updating patient. Please try again.');
+                        });
+                }
+            })
+            .catch((error) => {
+                console.error('Error checking PESEL uniqueness:', error);
+            });
     };
 
     return (

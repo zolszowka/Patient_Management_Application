@@ -1,58 +1,25 @@
 import React, {useEffect, useState} from "react";
 import './PatientList.css';
 import {useNavigate} from "react-router-dom";
+import axios from 'axios';
 
 const PatientList = () => {
     const [patients, setPatients] = useState([]);
 
     useEffect(() => {
-        const openRequest = indexedDB.open('PatientsDB', 1);
-
-        openRequest.onsuccess = function (event) {
-            const database = event.target.result;
-            const transaction = database.transaction(['patients'], 'readonly')
-            const objectStore = transaction.objectStore('patients');
-            const request = objectStore.getAll();
-
-            request.onsuccess = function (event) {
-                setPatients(event.target.result);
-            };
-
-            request.onerror = function (event) {
-                console.log('Error getting patients from database')
-            };
-
-        };
-        openRequest.onerror = function (event) {
-            console.log('Error opening database');
-        };
+        axios.get("http://localhost:5000/patientlist").then((data)=>{
+            console.log(data)
+            setPatients(data.data)
+        });
     }, []);
 
     const handleDeletePatientButtonClick = (patientId) => {
-        const openRequest = indexedDB.open('PatientsDB', 1);
-        openRequest.onsuccess = function (event) {
-            const database = event.target.result;
-            const transaction = database.transaction(['patients'], 'readwrite')
-            const objectStore = transaction.objectStore('patients');
-
-            const deleteRequest = objectStore.delete(patientId);
-
-            deleteRequest.onsuccess = function (event) {
-                console.log('Patient deleted successfully');
-                const updatedPatients = patients.filter(patient => patient.id !== patientId);
-                setPatients(updatedPatients);
-                alert('Patient deleted successfully.')
-            };
-
-            deleteRequest.onerror = function (event) {
-                console.log('Error deleting patient')
-            };
-
-        };
-        openRequest.onerror = function (event) {
-            console.log('Error opening database');
-        };
-
+        axios.delete(`http://localhost:5000/delete/${patientId}`).then((response)=>{
+            alert('Patient deleted successfully.');
+            axios.get("http://localhost:5000/patientlist").then((data) => {
+                setPatients(data.data);
+            });
+        })
     }
 
     const navigate = useNavigate();

@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import './AddPatient.css';
+import axios from 'axios';
 
 
 const AddPatient = () => {
-    const [patients, setPatients] = useState([]);
     const [formData, setFormData] = useState({
         firstname: '',
         lastname: '',
@@ -13,36 +13,16 @@ const AddPatient = () => {
         zipcode: ''
     });
 
-    useEffect(() => {
-        const openRequest = indexedDB.open('PatientsDB', 1);
-
-        openRequest.onsuccess = function (event) {
-            const database = event.target.result;
-            const transaction = database.transaction(['patients'], 'readonly')
-            const objectStore = transaction.objectStore('patients');
-            const allPatientsRequest = objectStore.getAll();
-
-            allPatientsRequest.onsuccess = function (event) {
-                setPatients(event.target.result);
-            };
-
-            allPatientsRequest.onerror = function (event) {
-                console.log('Error getting patients from database')
-            };
-
-        };
-        openRequest.onerror = function (event) {
-            console.log('Error opening database');
-        };
-    }, []);
-
-
     const handleChange = (e) => {
         const {name, value} = e.target;
         setFormData({...formData, [name]: value});
     };
 
     const handleSubmit = () => {
+        if (formData.zipcode.length !== 6) {
+            alert("ZIP code must have 6 characters.");
+            return;
+        }
         if (!formData.pesel) {
             alert("Please enter the PESEL.");
             return;
@@ -52,42 +32,34 @@ const AddPatient = () => {
             alert("PESEL must have 11 digits.");
             return;
         }
+        axios.get(`http://localhost:5000/checkpesel/${formData.pesel}`)
+            .then((response) => {
+                if (response.data.exists) {
+                    alert("This PESEL already exists in the database.");
+                } else {
+                    axios.post("http://localhost:5000/add", formData)
+                        .then((response) => {
+                            console.log("Patient added successfully:", response.data);
+                            alert('Patient added successfully.');
+                            setFormData({
+                                firstname: '',
+                                lastname: '',
+                                pesel: '',
+                                street: '',
+                                city: '',
+                                zipcode: ''
+                            });
+                        })
+                        .catch((error) => {
+                            console.error('Error adding patient:', error);
+                            alert('Error adding patient. Please try again.')
+                        });
+                }
+            })
+            .catch((error) => {
+                console.error('Error checking PESEL uniqueness:', error);
+            });
 
-        const isPeselUnique = patients.every(patient => patient.pesel !== formData.pesel);
-        if (!isPeselUnique) {
-            alert("This PESEL already exists in the database.");
-            return;
-        }
-
-        const openRequest = indexedDB.open('PatientsDB', 1);
-
-        openRequest.onsuccess = function (event) {
-            const database = event.target.result;
-            const transaction = database.transaction(['patients'], 'readwrite');
-            const objectStore = transaction.objectStore('patients');
-            const addRequest = objectStore.add(formData);
-
-            addRequest.onsuccess = function (event) {
-                console.log('Patient added successfully');
-                alert('Patient added successfully.');
-                setFormData({
-                    firstname: '',
-                    lastname: '',
-                    pesel: '',
-                    street: '',
-                    city: '',
-                    zipcode: ''
-                });
-            };
-
-            addRequest.onerror = function (event) {
-                console.log('Error adding patient');
-            };
-        };
-
-        openRequest.onerror = function (event) {
-            console.log('Error opening database');
-        };
     };
 
 
