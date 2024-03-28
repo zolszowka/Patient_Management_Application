@@ -19,7 +19,7 @@ The application allows:
 ## How to run:
 1. Make sure you have Node.js and MySQL installed on your computer.
 2. Clone this project to your computer.
-3. Import database "clinic" using [clinic_patients.sql](https://github.com/zolszowka/Patient_Management_Application/blob/master/database/clinic_patients.sql)
+3. Import database "clinic" using [clinic_patients.sql](https://github.com/zolszowka/Patient_Management_Application/blob/master/database/clinic_patients.sql).
 4. Create a user using the credentials from the [database_login_data.txt](https://github.com/zolszowka/Patient_Management_Application/blob/master/database/database_login_data.txt) file and grant appropriate permissions.
 5. Open a terminal in the project's main directory.
 6. Go to server directory.
@@ -55,6 +55,6 @@ After clicking the "Edit" button, you'll be redirected to a page where you can e
 
 ![Alt text](https://github.com/zolszowka/Patient_Management_Application/blob/master/readme/EditPatient.JPG)
 
-On the Patient List page, you can sort patients alphabetically by last name or by ID.
+On the Patient List page, you can sort patients alphabetically by last name or by ID number.
 
 ![Alt text](https://github.com/zolszowka/Patient_Management_Application/blob/master/readme/PatientListSorted.JPG)
