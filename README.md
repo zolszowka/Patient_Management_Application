@@ -31,7 +31,7 @@ npm install
 ```
 npm start
 ```
-6. Go to client directory.
+7. Go to client directory.
 * Install dependencies.
 ```
 npm install
